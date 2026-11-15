@@ -25,7 +25,7 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = "polls/results.html"
 
-
+'''
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
@@ -47,4 +47,36 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+'''
 
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST["choice"])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form with an error.
+        return render(
+            request,
+            "polls/detail.html",
+            {
+                "question": question,
+                "error_message": "You didn't select a choice.",
+            },
+        )
+    else:
+        # 1. Update votes
+        selected_choice.votes += 1
+        selected_choice.save()
+
+        # 2. Capture and save feedback (if any was entered)
+        feedback_text = request.POST.get("feedback", "").strip()
+        if feedback_text:
+            Feedback.objects.create(
+                choice=selected_choice,
+                feedback_text=feedback_text[:500]  # Enforce the 500 character limit safely
+            )
+
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))

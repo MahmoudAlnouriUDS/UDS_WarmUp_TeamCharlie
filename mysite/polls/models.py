@@ -23,3 +23,12 @@ class Choice(models.Model):
  
     def __str__(self):
         return self.choice_text
+
+class Feedback(models.Model):
+    # Link it to the Choice selected (or use Question if it's per poll instead of per choice)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True, blank=True)
+    feedback_text = models.CharField(max_length=500)
+     
+    def __str__(self):
+        # Return a clean string representation (e.g., first 50 characters of feedback)
+        return self.feedback_text[:50]    
