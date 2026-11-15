@@ -1,0 +1,9 @@
+#### Testing a feature to show the feedback webpage after voting
+
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+{% csrf_token %}
+    <label for="feedback"><strong>Additional Feedback (Optional, max 500 characters):</strong></label><br>
+    <textarea name="feedback_text" id="feedback" rows="4" cols="50" maxlength="500"></textarea>
+<input type="submit" value="Vote">
+</form>
