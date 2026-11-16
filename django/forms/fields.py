@@ -88,7 +88,7 @@ class Field:
     )
     default_validators = []  # Default set of validators
     # Add an 'invalid' entry to default_error_message if you want a specific
-    # field error message not raised by the field validators.
+    # field error message not raised by the field validators. Check your entry
     default_error_messages = {
         "required": _("This field is required."),
     }
